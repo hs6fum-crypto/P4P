@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#174a3a">
+  <title>P4P | โรงพยาบาลพรหมพิราม</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark">P4P</div>
+    <div class="brand-text"><strong>บันทึกภาระงาน P4P</strong><span>โรงพยาบาลพรหมพิราม · ปีงบประมาณ</span></div>
+    <div class="top-actions"><button class="btn btn-quiet" id="backupBtn">สำรองข้อมูล</button><button class="btn btn-quiet" id="restoreBtn">นำเข้าข้อมูล</button><input id="restoreFile" type="file" accept=".json,application/json" hidden></div>
+  </header>
+  <main class="shell">
+    <section class="intro">
+      <div><p class="eyebrow">PERSONAL PERFORMANCE RECORD</p><h1>ระบบบันทึกผลการปฏิบัติงานรายบุคคล</h1><p class="muted">กรอกจำนวนผลงานในแต่ละวัน ระบบคำนวณคะแนนและจัดทำแบบสรุปให้โดยอัตโนมัติ</p></div>
+      <div class="intro-badge"><span class="dot"></span><span id="saveStatus">บันทึกในอุปกรณ์นี้</span></div>
+    </section>
+
+    <section class="filterbar card">
+      <label>ปีงบประมาณ<select id="fiscalSelect"></select></label>
+      <label>บุคลากร<select id="personSelect"></select></label>
+      <label>เดือน<select id="monthSelect"></select></label>
+      <div class="filter-buttons"><button class="btn btn-soft" id="addPersonBtn">＋ บุคลากร</button><button class="btn btn-primary" id="addMonthBtn">＋ เดือน</button></div>
+    </section>
+
+    <section class="metric-grid" id="metrics"></section>
+
+    <nav class="tabs" aria-label="เมนู P4P">
+      <button class="tab active" data-tab="work">บันทึกภาระงานรายวัน</button>
+      <button class="tab" data-tab="summary">สรุปการปฏิบัติงาน</button>
+      <button class="tab" data-tab="annual">ภาพรวมปีงบประมาณ</button>
+      <button class="tab" data-tab="export">การพิมพ์และส่งออก</button>
+      <button class="tab" data-tab="settings">ตั้งค่ากิจกรรม / วันหยุด</button>
+    </nav>
+
+    <section class="panel active" id="panel-work">
+      <div class="section-head"><div><h2>แบบเก็บภาระงานรายบุคคล</h2><p id="workSubtitle" class="muted"></p></div><div class="section-actions"><button class="btn btn-soft" id="editPersonBtn">แก้ไขข้อมูลบุคลากร</button><button class="btn btn-outline-danger" id="deletePersonBtn">ลบบุคลากร</button></div></div>
+      <div id="workPrintTitle" class="print-only-title"></div>
+      <div class="card table-card">
+        <div class="table-toolbar"><div><strong>บันทึกจำนวนผลงานแยกตามวันที่</strong><span class="muted small">ใส่จำนวนหรือชั่วโมงที่ปฏิบัติจริง · คะแนนคำนวณจากค่างาน ÷ 20 × เวลา ÷ 420</span></div><button class="btn btn-soft" id="addTaskBtn">＋ เพิ่มกิจกรรม</button></div>
+        <div class="legend"><span><i class="legend-weekend"></i> วันเสาร์–อาทิตย์</span><span><i class="legend-holiday"></i> วันหยุดราชการ</span><span id="holidayNote">คลิกชื่อวันที่ในตั้งค่าเพื่อจัดการวันหยุด</span></div>
+        <div class="table-scroll" id="workTableWrap"></div>
+      </div>
+      <div class="card leave-card">
+        <div class="section-head compact"><div><h3>สรุปวันปฏิบัติงานและวันลา</h3><p class="muted small">แก้ไขตัวเลขได้ ข้อมูลนี้จะเชื่อมกับแบบสรุปโดยตรง</p></div></div>
+        <div id="leaveFields" class="leave-grid"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-summary">
+      <div class="section-head"><div><h2>แบบสรุปการปฏิบัติงานรายบุคคล</h2><p class="muted">ข้อมูลสรุปดึงจากแบบเก็บภาระงานของเดือนที่เลือก</p></div></div>
+      <div class="report card source-form" id="printReport"></div>
+    </section>
+
+    <section class="panel" id="panel-annual">
+      <div class="section-head"><div><h2>ภาพรวมรายบุคคล</h2><p class="muted">สรุปคะแนนตามปีงบประมาณที่เลือก · คะแนนจากรายการรายวันและค่างานรายเดือน</p></div><button class="btn btn-outline" id="annualDocxBtn">ดาวน์โหลดสรุป DOCX</button></div>
+      <div class="card table-card"><div class="table-scroll" id="annualTableWrap"></div></div>
+    </section>
+
+    <section class="panel" id="panel-export">
+      <div class="section-head"><div><h2>การพิมพ์และส่งออก</h2><p class="muted">ส่งออกแบบเก็บภาระงานและแบบสรุปของบุคลากร/เดือนที่เลือก</p></div></div>
+      <div class="export-grid">
+        <article class="card export-card"><div class="export-icon">▦</div><div><h3>แบบเก็บภาระงานรายบุคคล</h3><p id="workExportInfo" class="muted small"></p></div><div class="export-actions"><button class="btn btn-soft" id="printWorkBtn">ดูตัวอย่างก่อนพิมพ์</button><button class="btn btn-outline" id="exportWorkDocxBtn">ดาวน์โหลด DOCX</button><button class="btn btn-primary" id="exportWorkPdfBtn">ดาวน์โหลด PDF</button></div></article>
+        <article class="card export-card"><div class="export-icon">▤</div><div><h3>แบบสรุปการปฏิบัติงานรายบุคคล</h3><p id="summaryExportInfo" class="muted small"></p></div><div class="export-actions"><button class="btn btn-soft" id="printSummaryBtn">ดูตัวอย่างก่อนพิมพ์</button><button class="btn btn-outline" id="exportSummaryDocxBtn">ดาวน์โหลด DOCX</button><button class="btn btn-primary" id="exportSummaryPdfBtn">ดาวน์โหลด PDF</button></div></article>
+      </div>
+      <div class="card note-card export-note"><strong>การส่งออก PDF</strong><p>ปุ่ม “ดาวน์โหลด PDF” สร้างไฟล์จากแอปโดยตรง ไม่มีวันที่ ชื่อหน้า ที่อยู่ไฟล์ หรือเลขหน้าที่ Chrome เติมให้ PDF เก็บหน้าฟอร์มเป็นภาพเพื่อรักษารูปแบบและฟอนต์ไทย หากเลือก “พิมพ์แบบฟอร์ม” ให้ปิดตัวเลือก Headers and footers / หัวกระดาษและท้ายกระดาษในหน้าพิมพ์</p></div>
+    </section>
+
+    <section class="panel" id="panel-settings">
+      <div class="section-head"><div><h2>ตั้งค่าระบบ</h2><p class="muted">จัดการกิจกรรมและวันหยุดที่แสดงเป็นแถบสีเทา</p></div></div>
+      <div class="settings-grid">
+        <article class="card settings-card"><div class="section-head compact"><div><h3>กิจกรรมของบุคลากร</h3><p class="muted small">เพิ่ม แก้ไข หรือลบรายการงาน</p></div><button class="btn btn-soft" id="settingsAddTask">＋ กิจกรรม</button></div><div id="taskSettings"></div></article>
+        <article class="card settings-card"><div class="section-head compact"><div><h3>วันหยุดราชการ</h3><p class="muted small">วันเสาร์–อาทิตย์แสดงสีเทาอัตโนมัติ วันหยุดเพิ่มหรือลบได้</p></div><button class="btn btn-soft" id="addHolidayBtn">＋ วันหยุด</button></div><div id="holidaySettings"></div></article>
+      </div>
+      <div class="card note-card"><strong>การจัดเก็บข้อมูล</strong><p id="storageNote">ข้อมูลนี้จัดเก็บในเบราว์เซอร์เครื่องนี้ ใช้ “สำรองข้อมูล” เป็นระยะเพื่อเก็บไฟล์ JSON ไว้สำรอง หากนำไปติดตั้งเป็น Google Apps Script ข้อมูลจะจัดเก็บใน Google Sheets ของผู้ใช้</p></div>
+    </section>
+    <footer class="footer">P4P Dashboard · โรงพยาบาลพรหมพิราม <span id="storageMode">Local app</span></footer>
+  </main>
+  <div class="preview-backdrop" id="printPreviewModal" hidden>
+    <section class="preview-dialog" role="dialog" aria-modal="true" aria-labelledby="printPreviewTitle">
+      <header class="preview-header"><div><strong id="printPreviewTitle">ตัวอย่างก่อนพิมพ์</strong><p id="printPreviewSubtitle" class="muted small"></p></div><div class="preview-actions"><button class="btn btn-soft" id="closePrintPreviewBtn">ปิด</button><button class="btn btn-primary" id="printPreviewPrintBtn">พิมพ์แบบฟอร์ม</button></div></header>
+      <div class="preview-stage" id="printPreviewStage"></div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="seed-data.js"></script>
+  <script src="jszip.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
