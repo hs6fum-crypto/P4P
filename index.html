@@ -101,8 +101,7 @@ body.preview-open{overflow:hidden}
 @media(max-width:700px){.preview-backdrop{padding:0}.preview-dialog{width:100vw;height:100dvh;border-radius:0}.preview-header{align-items:flex-start;padding:11px}.preview-header strong{font-size:13px}.preview-actions .btn{padding:8px}.preview-stage{padding:10px}.preview-page-summary{transform:scale(.82);transform-origin:top left;margin-left:0;margin-bottom:-200px}.preview-page-work{margin-left:0}}
 .source-form .signature-sheet{width:100%;table-layout:fixed;margin-top:11px}
 .source-form .signature-sheet td{height:24px;padding:2px 14px;line-height:1.35;vertical-align:middle}
-.source-form .signature-sheet .signature-declaration td:first-child{text-align:left}
-.source-form .signature-sheet .signature-declaration td:last-child{text-align:right}
+.source-form .signature-sheet .signature-declaration td{text-align:center}
 .source-form .signature-sheet .signature-space{height:18px!important}
 .source-form .signature-sheet tr:nth-child(3) td{padding-top:4px}
 </style>
@@ -1310,7 +1309,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
     leaveGrid.forEach(function(row){drawLowerGridRow(y,23);wrappedCell(ctx,row[0],left+4,y,lowerWidths[0]-8,23,8.8,false,'left','#111111');wrappedCell(ctx,row[1],left+lowerWidths[0],y,lowerWidths[1],23,8.8,false,'center','#111111');wrappedCell(ctx,row[2],left+lowerWidths[0]+lowerWidths[1]+4,y,lowerWidths[2]-8,23,8.8,false,'left','#111111');y+=23;});y+=12;
     var signatureHalf=lowerWidth/2;
     function signatureRow(height,leftTextValue,rightTextValue,leftAlign,rightAlign){ctx.fillStyle='#ffffff';ctx.fillRect(left,y,lowerWidth,height);if(leftTextValue)wrappedCell(ctx,leftTextValue,left+4,y,signatureHalf-8,height,7.8,false,leftAlign||'center','#111111');if(rightTextValue)wrappedCell(ctx,rightTextValue,left+signatureHalf+4,y,signatureHalf-8,height,7.8,false,rightAlign||'center','#111111');y+=height;}
-    signatureRow(24,'ข้าพเจ้า '+p.name+' ขอรับรองว่าได้ปฏิบัติงานจริง','ข้าพเจ้า ขอรับรองว่าได้ปฏิบัติงานจริง','left','right');
+    signatureRow(24,'ข้าพเจ้า '+p.name+' ขอรับรองว่าได้ปฏิบัติงานจริง','ข้าพเจ้า ขอรับรองว่าได้ปฏิบัติงานจริง');
     signatureRow(20,'','');
     signatureRow(21,'ลงชื่อ..................................................(ผู้ปฏิบัติงาน)','ลงชื่อ.................................................................');
     signatureRow(21,'('+p.name+')',signer.nameLine);
@@ -1414,7 +1413,7 @@ https://github.com/nodeca/pako/blob/main/LICENSE
       ['อื่นๆ',fmt(leave.other,0),'วัน','','','']
     ];
     var sigRows=[
-      [{text:'ข้าพเจ้า '+p.name+' ขอรับรองว่าได้ปฏิบัติงานจริง',center:false},{text:'ข้าพเจ้า ขอรับรองว่าได้ปฏิบัติงานจริง',right:true}],
+      [{text:'ข้าพเจ้า '+p.name+' ขอรับรองว่าได้ปฏิบัติงานจริง',center:true},{text:'ข้าพเจ้า ขอรับรองว่าได้ปฏิบัติงานจริง',center:true}],
       [{text:''},{text:''}],
       [{text:'ลงชื่อ..................................................(ผู้ปฏิบัติงาน)',center:true},{text:'ลงชื่อ.................................................................',center:true}],
       [{text:'('+p.name+')',center:true},{text:signer.nameLine,center:true}],
