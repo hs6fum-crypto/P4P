@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#174a3a">
+  <title>ฉ11 | ใบขอรับเงินค่าตอบแทนเบี้ยเลี้ยงเหมาจ่าย</title>
+  <link rel="stylesheet" href="sh11.css">
+</head>
+<body>
+  <header class="app-topbar">
+    <a class="brand-mark" href="index.html" aria-label="กลับหน้า P4P">P4P</a>
+    <div class="brand-copy"><strong>แบบขอรับเงินค่าตอบแทนเบี้ยเลี้ยงเหมาจ่าย</strong><span>สำหรับเจ้าหน้าที่ที่ปฏิบัติงานในหน่วยบริการหรือหน่วยบริการในเครือข่าย · ฉ11</span></div>
+    <div class="top-actions"><a class="btn btn-quiet" href="index.html">กลับหน้า P4P</a><button class="btn btn-quiet" id="backupBtn">สำรองข้อมูล</button><button class="btn btn-quiet" id="restoreBtn">นำเข้าข้อมูล</button><input id="restoreFile" type="file" accept=".json,application/json" hidden></div>
+  </header>
+  <main class="app-shell">
+    <section id="dashboardView">
+      <div class="page-heading"><div><p class="eyebrow">STAFF ALLOWANCE CLAIM · FORM ฉ11</p><h1>ทะเบียนใบขอรับเงิน ฉ11</h1><p class="muted">เลือกบุคลากร แล้วกรอกใบคำขอประจำเดือน ใบประกอบวิชาชีพจะผูกกับบุคคลและใช้ซ้ำได้</p></div><div class="heading-actions"><button class="btn btn-outline" id="addPersonBtn">＋ เพิ่มบุคลากร</button><button class="btn btn-primary" id="addRecordBtn">＋ สร้างคำขอ</button></div></div>
+      <div class="metric-grid" id="metrics"></div>
+      <section class="filterbar card"><label>ปี พ.ศ.<select id="filterYear"></select></label><label>เดือน<select id="filterMonth"></select></label><label>บุคลากร<select id="filterPerson"></select></label><label class="search-label">ค้นหาชื่อ / หน่วยบริการ<input id="searchInput" type="search" placeholder="พิมพ์ชื่อหรือหน่วยบริการ"></label></section>
+      <section class="card people-card"><div class="records-head"><div><h2>บุคลากรและใบประกอบวิชาชีพ</h2><p class="muted small">ข้อมูลและใบประกอบวิชาชีพแยกตามบุคคล</p></div><span id="peopleCount" class="muted small"></span></div><div id="peopleList" class="people-list"></div></section>
+      <section class="card records-card"><div class="records-head"><div><h2>รายการคำขอ</h2><p id="recordCount" class="muted small"></p></div><span id="saveStatus" class="save-status">บันทึกในเครื่องนี้</span></div><div class="table-scroll"><table class="records-table"><thead><tr><th>งวด</th><th>ผู้ขอรับเงิน</th><th>ตำแหน่ง / หน่วยบริการ</th><th>ระยะเวลา</th><th>จำนวนเงินต่อเดือน</th><th>ใบประกอบวิชาชีพ</th><th>จัดการ</th></tr></thead><tbody id="recordsBody"></tbody></table></div><div id="emptyState" class="empty-state" hidden><strong>ยังไม่มีใบขอรับเงิน</strong><span>สร้างรายการแรก แล้วกรอกข้อมูลตามแบบฟอร์มต้นฉบับ</span></div></section>
+    </section>
+
+    <section id="editorView" hidden>
+      <div class="page-heading editor-heading"><div><p class="eyebrow">FORM ฉ11</p><h1 id="editorTitle">สร้างใบขอรับเงิน</h1><p class="muted">จัดช่องกรอกตามแบบ ฉ11 ต้นฉบับ ข้อความสีดำเป็นค่าเริ่มต้น และปรับข้อความสีแดงได้</p></div><button class="btn btn-outline" id="cancelBtn">กลับรายการ</button></div>
+      <form id="recordForm" autocomplete="off">
+        <div class="claim-entry-paper">
+          <header class="claim-entry-header"><span class="entry-form-code">ฉ11</span><label class="entry-title-field">ชื่อแบบฟอร์ม<input name="formTitle"></label><label class="entry-subtitle-field">ข้อความบรรทัดรอง<input name="formSubtitle"></label><p>ข้อความพิมพ์สีดำเป็นค่าเริ่มต้น ช่องสีแดงของแบบฟอร์มเลือกพิมพ์สีแดงได้เมื่อทำเครื่องหมาย</p></header>
+        <section class="card form-section"><div class="section-title"><span class="section-number">๑.</span><div><h2>งวดและข้อมูลผู้ขอรับเงิน</h2><p class="muted small">ระบบใช้ปีปฏิทินและแสดงปี พ.ศ. ในแบบฟอร์ม</p></div></div>
+          <div class="field-grid three-col">
+            <label class="full-width">ผู้ขอรับเงิน<select name="personId" id="claimPersonSelect" required></select></label>
+            <label>เดือนที่ขอรับเงิน<select name="month" id="monthSelect" required></select></label>
+            <label>ปี พ.ศ.<select name="yearBE" id="yearSelect" required></select></label>
+            <label>หน่วยบริการ<input name="unitName" required></label>
+            <label>คำนำหน้า<input name="prefix" readonly></label><label>ชื่อ<input name="firstName" readonly required></label><label>นามสกุล<input name="lastName" readonly required></label>
+            <label>ตำแหน่ง<input name="position" readonly></label><label>ปฏิบัติงานที่<input name="workplace" readonly></label><label>จังหวัด<input name="province" readonly></label>
+            <label>ระดับ / กลุ่ม<input name="serviceLevel" readonly></label>
+            <label class="red-field">ระยะเวลาปฏิบัติงานในหน่วยบริการ (ปี)<input class="red-control auto-duration-control" name="networkYears" data-duration-auto="false" inputmode="numeric"></label>
+            <label class="red-field">ระยะเวลาปฏิบัติงานในหน่วยบริการ (เดือน)<input class="red-control auto-duration-control" name="networkMonths" data-duration-auto="false" inputmode="numeric"></label>
+            <label class="full-width">ข้อความอธิบายช่วงเวลาปฏิบัติงาน<input name="networkNote" placeholder="เช่น นับถึงวันสิ้นเดือนที่เบิกจ่าย"></label>
+          </div><p class="muted small duration-help">คำนวณจากวันที่ของการฝึกและประวัติงาน หากเว้นวันสิ้นสุด ระบบจะนับถึงวันสุดท้ายของเดือนที่ขอรับเงิน</p><label class="history-red-toggle"><input type="checkbox" id="networkRed">พิมพ์ระยะเวลาปฏิบัติงานส่วนนี้เป็นสีแดง</label>
+        </section>
+
+        <section class="card form-section"><div class="section-title"><span class="section-number">๒.</span><div><h2>ฝึกเพิ่มพูนทักษะ</h2><p class="muted small">ช่องนี้แก้ไขได้และเว้นว่างได้ตามประเภทเจ้าหน้าที่</p></div></div>
+          <div class="field-grid three-col"><label>ประเภทหน่วยบริการ<input name="trainingType" placeholder="รพศ./ท."></label><label>ชื่อหน่วยบริการ<input name="trainingFacility"></label><label>จังหวัด<input name="trainingProvince"></label><label>ตั้งแต่วันที่<input name="trainingFrom" placeholder="วัน เดือน ปี พ.ศ."></label><label>ถึงวันที่<input name="trainingTo" placeholder="วัน เดือน ปี พ.ศ."></label><label>รวมระยะเวลา<input class="auto-duration-control" name="trainingDuration" data-duration-auto="false" placeholder="ปี / เดือน"></label><label class="full-width">ข้อความเพิ่มเติม<input name="trainingNote"></label></div><label class="history-red-toggle"><input type="checkbox" id="trainingRed">พิมพ์รายละเอียดส่วนนี้เป็นสีแดง</label>
+        </section>
+
+        <section class="card form-section"><div class="section-title"><span class="section-number">๓.</span><div><h2>รายละเอียดการปฏิบัติงาน</h2><p class="muted small">กรอกวันเริ่มและวันสิ้นสุดเพื่อคำนวณระยะเวลาอัตโนมัติ เว้นวันสิ้นสุดไว้เพื่อนับถึงสิ้นเดือนที่ขอรับเงิน</p></div><button type="button" class="btn btn-soft" id="addHistoryBtn">＋ เพิ่มสถานที่ปฏิบัติงาน</button></div><div id="historyRows" class="history-list"></div></section>
+
+        <section class="card form-section"><div class="section-title"><span class="section-number">๔.</span><div><h2>ยอดรวมและข้อความสีแดง</h2><p class="muted small">ยอดรวมคำนวณจากระยะเวลาฝึกและช่วงวันที่ของแต่ละรายการอัตโนมัติ</p></div></div>
+          <div class="field-grid three-col"><label class="red-field">รวมทั้งสิ้น (ปี)<input class="red-control auto-duration-control" name="totalYears" data-duration-auto="false" inputmode="numeric"></label><label class="red-field">รวมทั้งสิ้น (เดือน)<input class="red-control auto-duration-control" name="totalMonths" data-duration-auto="false" inputmode="numeric"></label><label class="red-field">เป็นเงินเดือนละ (บาท)<input class="red-control" name="monthlyAmount" inputmode="numeric"></label><label class="full-width red-field">ข้อความเพิ่มเติม<input class="red-control" name="redNote" placeholder="ข้อความส่วนนี้พิมพ์สีดำเป็นค่าเริ่มต้น"></label></div><div class="field-grid two-col"><label class="history-red-toggle"><input type="checkbox" id="totalRed">พิมพ์ยอดรวมและข้อความเพิ่มเติมเป็นสีแดง</label><label class="history-red-toggle"><input type="checkbox" id="amountRed">พิมพ์จำนวนเงินรายเดือนเป็นสีแดง</label></div>
+        </section>
+
+        <section class="card form-section"><div class="section-title"><span class="section-number">๕.</span><div><h2>คำรับรองและลายมือชื่อ</h2><p class="muted small">แก้ไขข้อความ ชื่อ และตำแหน่งผู้ลงนามได้</p></div></div>
+          <div class="field-grid two-col"><label class="full-width">ข้อความรับรอง<input name="declarationText"></label><label>ชื่อผู้ขอรับเงิน<input name="signerName"></label><label>ตำแหน่งผู้ขอรับเงิน<input name="signerPosition"></label><label>ชื่อผู้รับรองการปฏิบัติงาน<input name="certifierName"></label><label>ตำแหน่งผู้รับรอง<input name="certifierPosition"></label><label class="full-width">ข้อความรับเงิน<input name="receiptText"></label><label>จำนวนเงินที่ได้รับ (บาท)<input name="receivedAmount" inputmode="numeric"></label><label>จำนวนเงินเป็นตัวอักษร<input name="amountWords"></label><label>วันที่ลงนาม<input name="signatureDate" placeholder="วันที่ เดือน พ.ศ."></label></div>
+        </section>
+
+        <section class="card form-section"><div class="section-title"><span class="section-number">๖.</span><div><h2>ใบประกอบวิชาชีพของบุคลากร</h2><p class="muted small">แนบและแก้ไขใบประกอบวิชาชีพจากเมนูบุคลากร ระบบจะใช้ภาพของบุคคลนี้กับทุกงวด</p></div></div>
+          <div class="claim-license-info"><div id="claimLicenseStatus" class="muted">เลือกบุคลากรเพื่อแสดงใบประกอบวิชาชีพ</div><img id="claimLicenseThumb" alt="ใบประกอบวิชาชีพของบุคลากร" hidden><button type="button" class="btn btn-outline" id="editClaimPersonBtn" hidden>แก้ไขข้อมูลบุคลากร</button></div>
+        </section>
+        </div>
+        <div class="form-actions"><button type="button" class="btn btn-outline" id="cancelBottomBtn">ยกเลิก</button><button type="submit" class="btn btn-primary">บันทึกคำขอ</button></div>
+      </form>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="previewModal" hidden><section class="preview-dialog" role="dialog" aria-modal="true" aria-labelledby="previewTitle"><header class="preview-header"><div><strong id="previewTitle">ดูภาพก่อนพิมพ์</strong><p id="previewSubtitle" class="muted small"></p></div><div class="preview-actions"><button class="btn btn-soft" id="previewClaimTab">ใบขอรับเงิน</button><button class="btn btn-soft" id="previewLicenseTab">ใบประกอบวิชาชีพ</button><button class="btn btn-soft" id="closePreviewBtn">ปิด</button><button class="btn btn-outline" id="printClaimBtn">พิมพ์แบบฟอร์มแนวตั้ง</button><button class="btn btn-primary" id="downloadClaimPdfBtn">PDF แบบฟอร์ม</button><button class="btn btn-outline" id="downloadClaimDocxBtn">DOCX แบบฟอร์ม</button><button class="btn btn-outline" id="printLicenseBtn">พิมพ์ใบประกอบฯ แนวนอน</button><button class="btn btn-primary" id="downloadLicensePdfBtn">PDF ใบประกอบฯ</button><button class="btn btn-outline" id="downloadLicenseDocxBtn">DOCX ใบประกอบฯ</button></div></header><div class="preview-stage" id="previewStage"></div></section></div>
+  <div class="modal-backdrop" id="personModal" hidden><section class="person-dialog" role="dialog" aria-modal="true" aria-labelledby="personModalTitle"><form id="personForm" autocomplete="off"><header class="person-modal-head"><div><h2 id="personModalTitle">เพิ่มบุคลากร</h2><p class="muted small">ข้อมูลนี้ใช้กับคำขอทุกเดือนของบุคคลเดียวกัน</p></div><button type="button" class="btn btn-soft" id="closePersonModalBtn">ปิด</button></header><input type="hidden" name="id"><div class="field-grid three-col"><label>คำนำหน้า<input name="prefix"></label><label>ชื่อ<input name="firstName" required></label><label>นามสกุล<input name="lastName" required></label><label>ตำแหน่ง<input name="position"></label><label>หน่วยบริการ<input name="workplace"></label><label>จังหวัด<input name="province"></label><label>ระดับ / กลุ่ม<input name="serviceLevel"></label><label>ชื่อบนใบอนุญาต<input name="licenseName"></label><label>เลขที่ใบอนุญาต<input name="licenseNumber"></label><label>วันหมดอายุ<input name="licenseExpiry" placeholder="วัน เดือน ปี พ.ศ."></label><label class="full-width upload-box">แนบใบประกอบวิชาชีพของบุคคลนี้ (JPG / PNG)<input id="personLicenseFile" type="file" accept="image/png,image/jpeg,image/webp"><span id="personLicenseStatus" class="muted small">ยังไม่ได้แนบภาพ</span></label></div><div id="personLicenseThumbWrap" class="license-thumb-wrap" hidden><img id="personLicenseThumb" alt="ตัวอย่างใบประกอบวิชาชีพ"><button type="button" id="removePersonLicenseBtn" class="btn btn-outline-danger">นำภาพออก</button></div><footer class="person-modal-actions"><button type="button" class="btn btn-outline" id="cancelPersonBtn">ยกเลิก</button><button type="submit" class="btn btn-primary">บันทึกบุคลากร</button></footer></form></section></div>
+  <div class="toast" id="toast" role="status"></div>
+  <script src="sh11-people-seed.js"></script>
+  <script src="jszip.min.js"></script>
+  <script src="sh11.js"></script>
+</body>
+</html>
